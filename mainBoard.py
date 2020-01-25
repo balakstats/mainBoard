@@ -58,15 +58,15 @@ class RunText(SampleBase):
         textColorBlue = graphics.Color(25,25,255)
         textColorWhite = graphics.Color(255,255,255)
 
-        player_blue = [{"X":192,"Y":7,"T":" 1:","A":0},{"X":192,"Y":15,"T":" 2:","A":0},{"X":192,"Y":23,"T":" 3:","A":0},{"X":192,"Y":31,"T":" 4:","A":0}
-                      ,{"X":0,"Y":7,"T":" 5:","A":0},{"X":0,"Y":15,"T":" 6:","A":0},{"X":0,"Y":23,"T":" 7:","A":0},{"X":0,"Y":31,"T":" 8:","A":0}
-                      ,{"X":224,"Y":7,"T":" 9:","A":0},{"X":224,"Y":15,"T":"10:","A":0},{"X":224,"Y":23,"T":"11:","A":0},{"X":224,"Y":31,"T":"12:","A":0}
-                     ,{"X":32,"Y":7,"T":"13:","A":0}]
+        player_blue = [{"X":194,"Y":7,"T":"1:","A":0},{"X":194,"Y":15,"T":"2:","A":0},{"X":194,"Y":23,"T":"3:","A":0},{"X":194,"Y":31,"T":"4:","A":0}
+                      ,{"X":2,"Y":7,"T":"5:","A":0},{"X":2,"Y":15,"T":"6:","A":0},{"X":2,"Y":23,"T":"7:","A":0},{"X":2,"Y":31,"T":"8:","A":0}
+                      ,{"X":220,"Y":7,"T":" 9:","A":0},{"X":220,"Y":15,"T":"10:","A":0},{"X":220,"Y":23,"T":"11:","A":0},{"X":220,"Y":31,"T":"12:","A":0}
+                     ,{"X":28,"Y":7,"T":"13:","A":0}]
 
-        player_white = [{"X":321,"Y":7,"T":" 1:","A":0},{"X":321,"Y":15,"T":" 2:","A":0},{"X":321,"Y":23,"T":" 3:","A":0},{"X":321,"Y":31,"T":" 4:","A":0}
-                       ,{"X":129,"Y":7,"T":" 5:","A":0},{"X":129,"Y":15,"T":" 6:","A":0},{"X":129,"Y":23,"T":" 7:","A":0},{"X":129,"Y":31,"T":" 8:","A":0}
+        player_white = [{"X":326,"Y":7,"T":"1:","A":0},{"X":326,"Y":15,"T":"2:","A":0},{"X":326,"Y":23,"T":"3:","A":0},{"X":326,"Y":31,"T":"4:","A":0}
+                       ,{"X":134,"Y":7,"T":"5:","A":0},{"X":134,"Y":15,"T":"6:","A":0},{"X":134,"Y":23,"T":"7:","A":0},{"X":134,"Y":31,"T":"8:","A":0}
                        ,{"X":353,"Y":7,"T":" 9:","A":0},{"X":353,"Y":15,"T":"10:","A":0},{"X":353,"Y":23,"T":"11:","A":0},{"X":353,"Y":31,"T":"12:","A":0}
-                       ,{"X":161,"Y":7,"T":"13:","A":0}]
+                       ,{"X":160,"Y":7,"T":"13:","A":0}]
 
         print("Draw!")
         textTime="-:-"
@@ -80,33 +80,29 @@ class RunText(SampleBase):
             offscreen_canvas.Clear()
             i=0
             for player in player_blue:
-#                graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorBlue if player["A"]<3 else (textColorGreen if i==4 or i==5 or i==12 else textColorRed), player["T"])
                 graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorBlue if player["A"]<3 else textColorRed, player["T"])
                 if player["A"] > 0:
-#                    graphics.DrawText(offscreen_canvas, font1, player["X"]+13, player["Y"], textColorGreen if i==4 or i==5 or i==12 else textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
-                    graphics.DrawText(offscreen_canvas, font1, player["X"]+15, player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
+                    graphics.DrawText(offscreen_canvas, font1, player["X"] + (10 if int(player["T"].strip(":"))<9 else 15), player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
                 i=i+1
 
             i=0
             for player in player_white:
-#                graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorWhite if player["A"]<3 else (textColorGreen if i==4 or i==5 or i==12 else textColorRed), player["T"])
                 graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorWhite if player["A"]<3 else textColorRed, player["T"])
                 if player["A"] > 0:
-#                    graphics.DrawText(offscreen_canvas, font1, player["X"]+13, player["Y"], textColorGreen if i==4 or i==5 or i==12 else textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
-                    graphics.DrawText(offscreen_canvas, font1, player["X"]+15, player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
+                    graphics.DrawText(offscreen_canvas, font1, player["X"]+ (10 if int(player["T"].strip(":"))<9 else 15), player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
                 i=i+1
 
-            graphics.DrawText(offscreen_canvas, font, 253, 31, textColorGreen if pause else textColor, textTime)
-            graphics.DrawText(offscreen_canvas, font1, 275, 7, textColorGreen if pause else textColor, textGameSection)
+            graphics.DrawText(offscreen_canvas, font, 258, 31, textColorGreen if pause else (textColorRed if textTime.split(":")[0] == "0" else textColor), textTime)
+            graphics.DrawText(offscreen_canvas, font1, 280, 7, textColorGreen if pause else textColor, textGameSection)
 
             tempText = textResult.split(":")
             if (tempText[0] != "-") and (int(tempText[0]) > 9):
-                x = 46
+                x = 51
             else:
-                x = 61
+                x = 66
             graphics.DrawText(offscreen_canvas, font, x, 31, textColor, textResult)
-            graphics.DrawText(offscreen_canvas, font1, 32, 29, textColor, textTeamBlue)
-            graphics.DrawText(offscreen_canvas, font1, 161, 29, textColor, textTeamWhite)
+            graphics.DrawText(offscreen_canvas, font1, 28, 29, textColor, textTeamBlue)
+            graphics.DrawText(offscreen_canvas, font1, 160, 29, textColor, textTeamWhite)
 
             offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
 
@@ -171,6 +167,5 @@ class RunText(SampleBase):
 if __name__=="__main__":
     print("Start shotclock")
     run_text = RunText()
-#    time.sleep(3)
     if (not run_text.process()):
             run_text.print_help()
