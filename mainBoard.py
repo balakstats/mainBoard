@@ -26,9 +26,7 @@ class RunText(SampleBase):
         super(RunText, self).__init__(*args, **kwargs)
 #        self.s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
 
-
     def run(self):
-        # start bluetooth server
         cmd = "hciconfig"
         device_id = "hci0"
         status, output = subprocess.getstatusoutput(cmd)
@@ -45,17 +43,18 @@ class RunText(SampleBase):
         client, address = s.accept()
         print("bluetooth connected")
 
-#        offset_canvas    = self.matrix.CreateFrameCanvas()
         offscreen_canvas = self.matrix.CreateFrameCanvas()
         font = graphics.Font()
         font.LoadFont("/home/pi/Zeitnehmung/fonts/mainBoardFonts/timeNumbers.bdf")
-#        font.LoadFont("/home/pi/rpi-rgb-led-matrix/fonts/10x20.bdf")
         font1 = graphics.Font()
         font1.LoadFont("/home/pi/rpi-rgb-led-matrix/fonts/6x12.bdf")
-        textColor = graphics.Color(255,255,0)
-        textColorRed = graphics.Color(255,0,0)
+        font2 = graphics.Font()
+        font2.LoadFont("/home/pi/Zeitnehmung/fonts/mainBoardFonts/colon.bdf")
+
+        textColor      = graphics.Color(255,255,0)
+        textColorRed   = graphics.Color(255,0,0)
         textColorGreen = graphics.Color(0,255,0)
-        textColorBlue = graphics.Color(25,25,255)
+        textColorBlue  = graphics.Color(25,25,255)
         textColorWhite = graphics.Color(255,255,255)
 
         player_blue = [{"X":194,"Y":7,"T":"1:","A":0},{"X":194,"Y":15,"T":"2:","A":0},{"X":194,"Y":23,"T":"3:","A":0},{"X":194,"Y":31,"T":"4:","A":0}
@@ -69,42 +68,57 @@ class RunText(SampleBase):
                        ,{"X":160,"Y":7,"T":"13:","A":0}]
 
         print("Draw!")
-        textTime="-:-"
-        textResult="-:-"
-        textTeamBlue="---"
-        textTeamWhite="---"
-        pause = False
+        textTimeMin     = "--"
+        textTimeSec     = "--"
+        textColon       = ":"
+        textResultBlue  = "--"
+        textResultWhite = "--"
+        textTeamBlue    = "---"
+        textTeamWhite   = "---"
+        pause           = False
         textGameSection = "1"
+        cool = True
 
         while True:
-            offscreen_canvas.Clear()
-            i=0
-            for player in player_blue:
-                graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorBlue if player["A"]<3 else textColorRed, player["T"])
-                if player["A"] > 0:
-                    graphics.DrawText(offscreen_canvas, font1, player["X"] + (10 if int(player["T"].strip(":"))<9 else 15), player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
-                i=i+1
+            if cool:
+       	        offscreen_canvas.Clear()
+                i=0
+                for player in player_blue:
+                    graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorBlue if player["A"]<3 else textColorRed, player["T"])
+                    if player["A"] > 0:
+                        graphics.DrawText(offscreen_canvas, font1, player["X"] + (10 if int(player["T"].strip(":"))<9 else 15), player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
+                    i=i+1
 
-            i=0
-            for player in player_white:
-                graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorWhite if player["A"]<3 else textColorRed, player["T"])
-                if player["A"] > 0:
-                    graphics.DrawText(offscreen_canvas, font1, player["X"]+ (10 if int(player["T"].strip(":"))<9 else 15), player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
-                i=i+1
+                i=0
+                for player in player_white:
+                    graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorWhite if player["A"]<3 else textColorRed, player["T"])
+                    if player["A"] > 0:
+                        graphics.DrawText(offscreen_canvas, font1, player["X"]+ (10 if int(player["T"].strip(":"))<9 else 15), player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
+                    i=i+1
 
-            graphics.DrawText(offscreen_canvas, font, 258, 31, textColorGreen if pause else (textColorRed if textTime.split(":")[0] == "0" else textColor), textTime)
-            graphics.DrawText(offscreen_canvas, font1, 280, 7, textColorGreen if pause else textColor, textGameSection)
+                graphics.DrawText(offscreen_canvas, font , 262, 31, textColorGreen if pause else (textColorRed if textTimeMin == "0" else textColor), textTimeMin)
+                graphics.DrawText(offscreen_canvas, font2, 278, 25, textColorGreen if pause else (textColorRed if textTimeMin == "0" else textColor), textColon)
+                graphics.DrawText(offscreen_canvas, font , 286, 31, textColorGreen if pause else (textColorRed if textTimeMin == "0" else textColor), textTimeSec)
+                graphics.DrawText(offscreen_canvas, font1, 279, 7, textColorGreen if pause else textColor, textGameSection)
 
-            tempText = textResult.split(":")
-            if (tempText[0] != "-") and (int(tempText[0]) > 9):
-                x = 51
-            else:
-                x = 66
-            graphics.DrawText(offscreen_canvas, font, x, 31, textColor, textResult)
-            graphics.DrawText(offscreen_canvas, font1, 28, 29, textColor, textTeamBlue)
-            graphics.DrawText(offscreen_canvas, font1, 160, 29, textColor, textTeamWhite)
+                if (textResultBlue != "--") and (int(textResultBlue) > 9):
+                    xBlue  = 55
+                    xColon = xBlue+32
+                    xWhite = xColon+7
+                else:
+                    xBlue  = 70
+                    xColon = xBlue+16
+                    xWhite = xColon+7
+                graphics.DrawText(offscreen_canvas, font , xBlue , 31, textColor, textResultBlue)
+                graphics.DrawText(offscreen_canvas, font2, xColon, 25, textColor, textColon)
+                graphics.DrawText(offscreen_canvas, font , xWhite, 31, textColor, textResultWhite)
 
-            offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
+
+                graphics.DrawText(offscreen_canvas, font1, 30, 29, textColor, textTeamBlue)
+                graphics.DrawText(offscreen_canvas, font1, 162, 29, textColor, textTeamWhite)
+
+                offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
+                cool = False
 
             try:
                 data = client.recv(size)
@@ -119,6 +133,7 @@ class RunText(SampleBase):
                 client, address = s.accept()
 
             if data:
+                cool = True
                 recText = str(data).split("'")[1].strip("'")
                 print(recText)
                 recText = recText.split("#")
@@ -127,20 +142,20 @@ class RunText(SampleBase):
                         print("text: "+text)
                         tempText = text.split("%")
                         if tempText[0] == "timeGame":
-                            textTime = tempText[1]
+                            textTimeMin = tempText[1].split(":")[0]
+                            textTimeSec = tempText[1].split(":")[1]
                             pause = False
-                            print("time: "+textTime)
+                            print("time: "+textTimeMin)
+                            print("time: "+textTimeSec)
                         if tempText[0] == "timePause":
                             textTime = tempText[1]
                             pause = True
                         elif tempText[0] == "result":
-                            textResult = tempText[1]
-                            print("result: "+textResult)
+                            textResultBlue  = tempText[1].split(":")[0]
+                            textResultWhite = tempText[1].split(":")[1]
+                            print("result: "+textResultBlue)
+                            print("result: "+textResultWhite)
                         elif tempText[0] == "player":
-                            print(tempText[0])
-                            print(tempText[1])
-                            print(tempText[2])
-                            print(tempText[3])
                             if tempText[1].lower() == "blue":
                                 player_blue[int(tempText[2])-1]["A"] = int(tempText[3])
                             else:
@@ -160,6 +175,18 @@ class RunText(SampleBase):
                             print("yes white")
                         elif tempText[0] == "gameSection":
                             textGameSection = tempText[1]
+                        elif tempText[0] == "exclusionBlue":
+                            textEBlue = tempText[1]
+                        elif tempText[0] == "exclusion1Blue":
+                            textE1Blue = tempText[1]
+                        elif tempText[0] == "exclusion2Blue":
+                            textE2Blue = tempText[1]
+                        elif tempText[0] == "exclusionWhite":
+                            textEWhite = tempText[1]
+                        elif tempText[0] == "exclusion1Blue":
+                            textE1White = tempText[1]
+                        elif tempText[0] == "exclusion2Blue":
+                            textE2White = tempText[1]
                 except:
                     print("could not process message")
 
