@@ -51,31 +51,31 @@ class RunText(SampleBase):
         font2 = graphics.Font()
         font2.LoadFont("/home/pi/Zeitnehmung/fonts/mainBoardFonts/colon.bdf")
 
-        textColor      = graphics.Color(255,255,0)
-        textColorRed   = graphics.Color(255,0,0)
-        textColorGreen = graphics.Color(0,255,0)
-        textColorBlue  = graphics.Color(25,25,255)
-        textColorWhite = graphics.Color(255,255,255)
+        textColor      = [graphics.Color(255,255,0),graphics.Color(255,0,0),graphics.Color(0,255,0),graphics.Color(25,25,255),graphics.Color(255,255,255)]
+#        textColorRed   = graphics.Color(255,0,0)
+#        textColorGreen = graphics.Color(0,255,0)
+#        textColorBlue  = graphics.Color(25,25,255)
+#        textColorWhite = graphics.Color(255,255,255)
 
         player_blue = [{"X":194,"Y":7,"T":"1:","A":0},{"X":194,"Y":15,"T":"2:","A":0},{"X":194,"Y":23,"T":"3:","A":0},{"X":194,"Y":31,"T":"4:","A":0}
                       ,{"X":2,"Y":7,"T":"5:","A":0},{"X":2,"Y":15,"T":"6:","A":0},{"X":2,"Y":23,"T":"7:","A":0},{"X":2,"Y":31,"T":"8:","A":0}
-                      ,{"X":220,"Y":7,"T":" 9:","A":0},{"X":220,"Y":15,"T":"10:","A":0},{"X":220,"Y":23,"T":"11:","A":0},{"X":220,"Y":31,"T":"12:","A":0}
-                     ,{"X":28,"Y":7,"T":"13:","A":0}]
+                      ,{"X":221,"Y":7,"T":" 9:","A":0},{"X":221,"Y":15,"T":"10:","A":0},{"X":221,"Y":23,"T":"11:","A":0},{"X":221,"Y":31,"T":"12:","A":0}
+                     ,{"X":29,"Y":7,"T":"13:","A":0}]
 
-        player_white = [{"X":326,"Y":7,"T":"1:","A":0},{"X":326,"Y":15,"T":"2:","A":0},{"X":326,"Y":23,"T":"3:","A":0},{"X":326,"Y":31,"T":"4:","A":0}
-                       ,{"X":134,"Y":7,"T":"5:","A":0},{"X":134,"Y":15,"T":"6:","A":0},{"X":134,"Y":23,"T":"7:","A":0},{"X":134,"Y":31,"T":"8:","A":0}
-                       ,{"X":353,"Y":7,"T":" 9:","A":0},{"X":353,"Y":15,"T":"10:","A":0},{"X":353,"Y":23,"T":"11:","A":0},{"X":353,"Y":31,"T":"12:","A":0}
-                       ,{"X":160,"Y":7,"T":"13:","A":0}]
+        player_white = [{"X":324,"Y":7,"T":"1:","A":0},{"X":324,"Y":15,"T":"2:","A":0},{"X":324,"Y":23,"T":"3:","A":0},{"X":324,"Y":31,"T":"4:","A":0}
+                       ,{"X":132,"Y":7,"T":"5:","A":0},{"X":132,"Y":15,"T":"6:","A":0},{"X":132,"Y":23,"T":"7:","A":0},{"X":132,"Y":31,"T":"8:","A":0}
+                       ,{"X":351,"Y":7,"T":" 9:","A":0},{"X":351,"Y":15,"T":"10:","A":0},{"X":351,"Y":23,"T":"11:","A":0},{"X":351,"Y":31,"T":"12:","A":0}
+                       ,{"X":159,"Y":7,"T":"13:","A":0}]
 
         print("Draw!")
         textTimeMin     = "--"
         textTimeSec     = "--"
         textColon       = ":"
+        timeColor       = textColor[0]
         textResultBlue  = "--"
         textResultWhite = "--"
         textTeamBlue    = "---"
         textTeamWhite   = "---"
-        pause           = False
         textGameSection = "1"
         cool = True
 
@@ -84,22 +84,22 @@ class RunText(SampleBase):
        	        offscreen_canvas.Clear()
                 i=0
                 for player in player_blue:
-                    graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorBlue if player["A"]<3 else textColorRed, player["T"])
+                    graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColor[3] if player["A"]<3 else textColor[1], player["T"])
                     if player["A"] > 0:
-                        graphics.DrawText(offscreen_canvas, font1, player["X"] + (10 if int(player["T"].strip(":"))<9 else 15), player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
+                        graphics.DrawText(offscreen_canvas, font1, player["X"] + (10 if int(player["T"].strip(":"))<9 else 16), player["Y"], textColor[1], ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
                     i=i+1
 
                 i=0
                 for player in player_white:
-                    graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColorWhite if player["A"]<3 else textColorRed, player["T"])
+                    graphics.DrawText(offscreen_canvas, font1, player["X"], player["Y"], textColor[4] if player["A"]<3 else textColor[1], player["T"])
                     if player["A"] > 0:
-                        graphics.DrawText(offscreen_canvas, font1, player["X"]+ (10 if int(player["T"].strip(":"))<9 else 15), player["Y"], textColorRed, ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
+                        graphics.DrawText(offscreen_canvas, font1, player["X"]+ (10 if int(player["T"].strip(":"))<9 else 16), player["Y"], textColor[1], ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
                     i=i+1
 
-                graphics.DrawText(offscreen_canvas, font , 262, 31, textColorGreen if pause else (textColorRed if textTimeMin == "0" else textColor), textTimeMin)
-                graphics.DrawText(offscreen_canvas, font2, 278, 25, textColorGreen if pause else (textColorRed if textTimeMin == "0" else textColor), textColon)
-                graphics.DrawText(offscreen_canvas, font , 286, 31, textColorGreen if pause else (textColorRed if textTimeMin == "0" else textColor), textTimeSec)
-                graphics.DrawText(offscreen_canvas, font1, 279, 7, textColorGreen if pause else textColor, textGameSection)
+                graphics.DrawText(offscreen_canvas, font , 262, 31, timeColor, textTimeMin)
+                graphics.DrawText(offscreen_canvas, font2, 278, 25, timeColor, textColon)
+                graphics.DrawText(offscreen_canvas, font , 285, 31, timeColor, textTimeSec)
+                graphics.DrawText(offscreen_canvas, font1, 278,  7, timeColor, textGameSection)
 
                 if (textResultBlue != "--") and (int(textResultBlue) > 9):
                     xBlue  = 55
@@ -109,13 +109,13 @@ class RunText(SampleBase):
                     xBlue  = 70
                     xColon = xBlue+16
                     xWhite = xColon+7
-                graphics.DrawText(offscreen_canvas, font , xBlue , 31, textColor, textResultBlue)
-                graphics.DrawText(offscreen_canvas, font2, xColon, 25, textColor, textColon)
-                graphics.DrawText(offscreen_canvas, font , xWhite, 31, textColor, textResultWhite)
+                graphics.DrawText(offscreen_canvas, font , xBlue , 31, textColor[0], textResultBlue)
+                graphics.DrawText(offscreen_canvas, font2, xColon, 25, textColor[0], textColon)
+                graphics.DrawText(offscreen_canvas, font , xWhite, 31, textColor[0], textResultWhite)
 
 
-                graphics.DrawText(offscreen_canvas, font1, 30, 29, textColor, textTeamBlue)
-                graphics.DrawText(offscreen_canvas, font1, 162, 29, textColor, textTeamWhite)
+                graphics.DrawText(offscreen_canvas, font1, 30, 29, textColor[0], textTeamBlue)
+                graphics.DrawText(offscreen_canvas, font1, 162, 29, textColor[0], textTeamWhite)
 
                 offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
                 cool = False
@@ -144,12 +144,23 @@ class RunText(SampleBase):
                         if tempText[0] == "timeGame":
                             textTimeMin = tempText[1].split(":")[0]
                             textTimeSec = tempText[1].split(":")[1]
-                            pause = False
-                            print("time: "+textTimeMin)
-                            print("time: "+textTimeSec)
-                        if tempText[0] == "timePause":
-                            textTime = tempText[1]
-                            pause = True
+                            print("timeMin: "+textTimeMin)
+                            print("timeSec: "+textTimeSec)
+                            if len(tempText)>2:
+                                if tempText[2] == "default":
+                                    timeColor = textColor[0]
+                                elif tempText[2] == "red":
+                                    timeColor = textColor[1]
+                                elif tempText[2] == "green":
+                                    timeColor = textColor[2]
+                                elif tempText[2] == "blue":
+                                    timeColor = textColor[3]
+                                elif tempText[2] == "white":
+                                    timeColor = textColor[4]
+                                elif tempText[2] == "rgb":
+                                    color =tempText[3].split[","]
+                                    timeColor = graphics.Color(color[0],color[1],color[2])
+                                print("timeColor: "+tempText[2])
                         elif tempText[0] == "result":
                             textResultBlue  = tempText[1].split(":")[0]
                             textResultWhite = tempText[1].split(":")[1]
@@ -175,14 +186,10 @@ class RunText(SampleBase):
                             print("yes white")
                         elif tempText[0] == "gameSection":
                             textGameSection = tempText[1]
-                        elif tempText[0] == "exclusionBlue":
-                            textEBlue = tempText[1]
                         elif tempText[0] == "exclusion1Blue":
                             textE1Blue = tempText[1]
                         elif tempText[0] == "exclusion2Blue":
                             textE2Blue = tempText[1]
-                        elif tempText[0] == "exclusionWhite":
-                            textEWhite = tempText[1]
                         elif tempText[0] == "exclusion1Blue":
                             textE1White = tempText[1]
                         elif tempText[0] == "exclusion2Blue":
