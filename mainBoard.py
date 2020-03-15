@@ -5,6 +5,7 @@ import socket
 import subprocess
 import sys
 
+
 #import RPi.GPIO as gpio
 #gpio.setmode(gpio.BCM)
 #gpio.setup(6, gpio.OUT)
@@ -22,40 +23,38 @@ import sys
 
 class RunText(SampleBase):
     def __init__(self, *args, **kwargs):
-#        super(SimpleSquare, self).__init__(*args, **kwargs)
         super(RunText, self).__init__(*args, **kwargs)
-#        self.s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+        self.textColor = [graphics.Color(255,255,0),graphics.Color(255,0,0),graphics.Color(0,255,0),graphics.Color(25,25,255),graphics.Color(255,255,255)] # yellow,red,green,blue,white
+        self.font = graphics.Font()
+        self.font.LoadFont("/home/pi/mainBoard/fonts/mainBoardFonts/timeNumbersSeven.bdf")
+        self.font2 = graphics.Font()
+        self.font2.LoadFont("/home/pi/mainBoard/fonts/mainBoardFonts/colon.bdf")
+        self.font1 = graphics.Font()
+        self.font1.LoadFont("/home/pi/rpi-rgb-led-matrix/fonts/6x12.bdf")
+
 
     def run(self):
-        cmd = "hciconfig"
+        cmd       = "hciconfig"
         device_id = "hci0"
         status, output = subprocess.getstatusoutput(cmd)
         bt_mac = output.split("{}:".format(device_id))[1].split("BD Address: ")[1].split(" ")[0].strip()
         hostMACAddress = bt_mac
         print(bt_mac)
-        port = 1
+        port    = 1
         backlog = 1
-        size = 1024
-        s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+        size    = 1024
+        s       = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
         s.bind((hostMACAddress,port))
-        print("wait for bluetooth connection")
         s.listen(backlog)
+
+        print("wait for bluetooth connection")
+        offscreen_canvas = self.matrix.CreateFrameCanvas()
+        offscreen_canvas.Clear()
+        graphics.DrawText(offscreen_canvas, self.font1, 2, 31, self.textColor[0], "wait for connection")
+        offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
+
         client, address = s.accept()
         print("bluetooth connected")
-
-        offscreen_canvas = self.matrix.CreateFrameCanvas()
-        font = graphics.Font()
-        font.LoadFont("/home/pi/Zeitnehmung/fonts/mainBoardFonts/timeNumbers.bdf")
-        font1 = graphics.Font()
-        font1.LoadFont("/home/pi/rpi-rgb-led-matrix/fonts/6x12.bdf")
-        font2 = graphics.Font()
-        font2.LoadFont("/home/pi/Zeitnehmung/fonts/mainBoardFonts/colon.bdf")
-
-        textColor      = [graphics.Color(255,255,0),graphics.Color(255,0,0),graphics.Color(0,255,0),graphics.Color(25,25,255),graphics.Color(255,255,255)]
-#        textColorRed   = graphics.Color(255,0,0)
-#        textColorGreen = graphics.Color(0,255,0)
-#        textColorBlue  = graphics.Color(25,25,255)
-#        textColorWhite = graphics.Color(255,255,255)
 
         player_blue = [{"X":194,"Y":7,"T":"1:","A":0},{"X":194,"Y":15,"T":"2:","A":0},{"X":194,"Y":23,"T":"3:","A":0},{"X":194,"Y":31,"T":"4:","A":0}
                       ,{"X":2,"Y":7,"T":"5:","A":0},{"X":2,"Y":15,"T":"6:","A":0},{"X":2,"Y":23,"T":"7:","A":0},{"X":2,"Y":31,"T":"8:","A":0}
