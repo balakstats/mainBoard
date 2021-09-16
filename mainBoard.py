@@ -68,8 +68,6 @@ class RunText(SampleBase):
 
         print("Draw!")
         textTimeGame    = "-:--"
-#        textTimeMin     = "--"
-#        textTimeSec     = "--"
         textColon       = ":"
         timeColor       = self.textColor[0]
         textResultBlue  = "--"
@@ -148,10 +146,6 @@ class RunText(SampleBase):
                         tempText = text.split("%")
                         if tempText[0] == "timeGame":
                             textTimeGame = tempText[1]
-#                            textTimeMin = tempText[1].split(":")[0]
-#                            textTimeSec = tempText[1].split(":")[1]
-##                            print("timeMin: "+textTimeMin)
-#                            print("timeSec: "+textTimeSec)
                             if len(tempText)>2:
                                 if tempText[2] == "default":
                                     timeColor = textColor[0]
@@ -168,25 +162,28 @@ class RunText(SampleBase):
                                     timeColor = graphics.Color(color[0],color[1],color[2])
                                 print("timeColor: "+tempText[2])
                         elif tempText[0] == "result":
-                            tempTextResult = tempText[1].split(":")
-                            if tempTextResult[0].isdigit():
-                                textResultBlue = tempTextResult[0]
-                            if tempTextResult[1].isdigit():
-                                textResultWhite = tempTextResult[1]
-                            print("result: "+textResultBlue)
-                            print("result: "+textResultWhite)
+                            if len(tempText) > 1:
+                                tempTextResult = tempText[1].split(":")
+                                if tempTextResult[0].isdigit():
+                                    textResultBlue = tempTextResult[0]
+                                if len(tempTextResult) > 1 and tempTextResult[1].isdigit():
+                                    textResultWhite = tempTextResult[1]
+                                print("result: "+textResultBlue)
+                                print("result: "+textResultWhite)
                         elif tempText[0] == "player":
                             if tempText[1].lower() == "blue":
                                 player_blue[int(tempText[2])-1]["A"] = int(tempText[3])
                             else:
                                 player_white[int(tempText[2])-1]["A"] = int(tempText[3])
                         elif tempText[0] == "brightness":
-                            if int(tempText[1]) > 0 and int(tempText[1]) <= 100:
-                                print("brightness: "+tempText[1])
-                                try:
-                                    self.matrix.brightness = int(tempText[1])
-                                except:
-                                    print("could not set brightness")
+                            if len(tempText) > 1:
+                                if tempText[1].isdigit():
+                                    if int(tempText[1]) > 0 and int(tempText[1]) <= 100:
+                                        print("brightness: "+tempText[1])
+                                        try:
+                                            self.matrix.brightness = int(tempText[1])
+                                        except:
+                                            print("could not set brightness")
                         elif tempText[0] == "teamBlue":
                             textTeamBlue = tempText[1]
                             print("yes blue")
