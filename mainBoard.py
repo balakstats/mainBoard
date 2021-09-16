@@ -168,8 +168,11 @@ class RunText(SampleBase):
                                     timeColor = graphics.Color(color[0],color[1],color[2])
                                 print("timeColor: "+tempText[2])
                         elif tempText[0] == "result":
-                            textResultBlue  = tempText[1].split(":")[0]
-                            textResultWhite = tempText[1].split(":")[1]
+                            tempTextResult = tempText[1].split(":")
+                            if tempTextResult[0].isdigit():
+                                textResultBlue  = tempText[1].split(":")[0]
+                            if tempTextResult[1].isdigit():
+                                textResultWhite = tempText[1].split(":")[1]
                             print("result: "+textResultBlue)
                             print("result: "+textResultWhite)
                         elif tempText[0] == "player":
