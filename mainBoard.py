@@ -170,7 +170,7 @@ class RunText(SampleBase):
                         elif tempText[0] == "result":
                             tempTextResult = tempText[1].split(":")
                             if tempTextResult[0].isdigit():
-                                textResultBlue  = tempText[1].split(":")[0]
+                                textResultBlue = tempText[1].split(":")[0]
                             if tempTextResult[1].isdigit():
                                 textResultWhite = tempText[1].split(":")[1]
                             print("result: "+textResultBlue)
