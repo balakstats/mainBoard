@@ -177,13 +177,12 @@ class RunText(SampleBase):
                                 player_white[int(tempText[2])-1]["A"] = int(tempText[3])
                         elif tempText[0] == "brightness":
                             if len(tempText) > 1:
-                                if tempText[1].isdigit():
-                                    if int(tempText[1]) > 0 and int(tempText[1]) <= 100:
-                                        print("brightness: "+tempText[1])
-                                        try:
-                                            self.matrix.brightness = int(tempText[1])
-                                        except:
-                                            print("could not set brightness")
+                                if tempText[1].isdigit() and int(tempText[1]) > 0 and int(tempText[1]) <= 100:
+                                    print("brightness: "+tempText[1])
+                                    try:
+                                        self.matrix.brightness = int(tempText[1])
+                                    except:
+                                        print("could not set brightness")
                         elif tempText[0] == "teamBlue":
                             textTeamBlue = tempText[1]
                             print("yes blue")
