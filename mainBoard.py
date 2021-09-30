@@ -123,9 +123,9 @@ class RunText(SampleBase):
             try:
                 data = client.recv(size)
             except:
-                print("lost connection.")
+                print("connection lost")
                 offscreen_canvas.Clear()
-                graphics.DrawText(offscreen_canvas, self.font1, 2, 31, self.textColor[0], "lost connection")
+                graphics.DrawText(offscreen_canvas, self.font1, 2, 31, self.textColor[0], "connection lost")
                 offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
                 s.close()
                 time.sleep(1)
