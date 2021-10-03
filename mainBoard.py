@@ -22,7 +22,7 @@ import sys
 class RunText(SampleBase):
     def __init__(self, *args, **kwargs):
         super(RunText, self).__init__(*args, **kwargs)
-        self.textColor = [graphics.Color(255,255,0),graphics.Color(255,0,0),graphics.Color(0,255,0),graphics.Color(25,25,255),graphics.Color(255,255,255)] # yellow,red,green,blue,white
+        self.textColor = [graphics.Color(255,255,0),graphics.Color(255,0,0),graphics.Color(0,255,0),graphics.Color(130,130,255),graphics.Color(255,255,255)] # yellow,red,green,blue,white
         self.font = graphics.Font()
         self.font.LoadFont("/home/pi/mainBoard/fonts/mainBoardFonts/timeNumbersSeven.bdf")
         self.font2 = graphics.Font()
@@ -31,6 +31,8 @@ class RunText(SampleBase):
         self.font1.LoadFont("/home/pi/rpi-rgb-led-matrix/fonts/6x12.bdf")
         self.font3 = graphics.Font()
         self.font3.LoadFont("/home/pi/mainBoard/fonts/mainBoardFonts/timeNumbersColon.bdf")
+        self.font4 = graphics.Font()
+        self.font4.LoadFont("/home/pi/mainBoard/fonts/mainBoardFonts/resultNumbersSeven.bdf")
 
 
     def run(self):
@@ -50,7 +52,7 @@ class RunText(SampleBase):
         print("wait for bluetooth connection")
         offscreen_canvas = self.matrix.CreateFrameCanvas()
         offscreen_canvas.Clear()
-        graphics.DrawText(offscreen_canvas, self.font1, 2, 31, self.textColor[0], "wait for connection")
+        graphics.DrawText(offscreen_canvas, self.font1, 2, 31, self.textColor[0], "wait for connection ...")
         offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
 
         client, address = s.accept()
@@ -79,7 +81,7 @@ class RunText(SampleBase):
 
         while True:
             if cool:
-       	        offscreen_canvas.Clear()
+                offscreen_canvas.Clear()
                 i=0
                 for player in player_blue:
                     graphics.DrawText(offscreen_canvas, self.font1, player["X"], player["Y"], self.textColor[3] if player["A"]<3 else self.textColor[1], player["T"])
@@ -94,22 +96,24 @@ class RunText(SampleBase):
                         graphics.DrawText(offscreen_canvas, self.font1, player["X"]+ (10 if int(player["T"].strip(":"))<9 else 16), player["Y"], self.textColor[1], ("*" if player["A"]==1 else ("**" if player["A"]==2 else "***")))
                     i=i+1
 
-                graphics.DrawText(offscreen_canvas, self.font , 262, 32, timeColor, textTimeGame.split(":")[0])
-                graphics.DrawText(offscreen_canvas, self.font3 , 278, 32, timeColor, ":")
-                graphics.DrawText(offscreen_canvas, self.font , 284, 32, timeColor, textTimeGame.split(":")[1])
+                graphics.DrawText(offscreen_canvas, self.font,  262, 32, timeColor, textTimeGame.split(":")[0])
+                graphics.DrawText(offscreen_canvas, self.font3, 278, 32, timeColor, ":")
+                                graphics.DrawText(offscreen_canvas, self.font,  262, 32, timeColor, textTimeGame.split(":")[0])
+                graphics.DrawText(offscreen_canvas, self.font3, 278, 32, timeColor, ":")
+                graphics.DrawText(offscreen_canvas, self.font,  284, 32, timeColor, textTimeGame.split(":")[1])
                 graphics.DrawText(offscreen_canvas, self.font1, 278,  8, timeColor, textGameSection)
 
                 if (textResultBlue != "--") and (int(textResultBlue) > 9):
                     xBlue  = 55
                     xColon = xBlue+32
-                    xWhite = xColon+7
+                    xWhite = xColon+4
                 else:
-                    xBlue  = 70
+                    xBlue  = 71
                     xColon = xBlue+16
-                    xWhite = xColon+7
-                graphics.DrawText(offscreen_canvas, self.font , xBlue , 31, self.textColor[0], textResultBlue)
-                graphics.DrawText(offscreen_canvas, self.font2, xColon, 25, self.textColor[0], textColon)
-                graphics.DrawText(offscreen_canvas, self.font , xWhite, 31, self.textColor[0], textResultWhite)
+                    xWhite = xColon+4
+                graphics.DrawText(offscreen_canvas, self.font4, xBlue,  31, self.textColor[0], textResultBlue)
+                graphics.DrawText(offscreen_canvas, self.font3, xColon, 31, self.textColor[0], ":")
+                graphics.DrawText(offscreen_canvas, self.font4, xWhite, 31, self.textColor[0], textResultWhite)
 
                 graphics.DrawText(offscreen_canvas, self.font1, 30,  29, self.textColor[0], textTeamBlue)
                 graphics.DrawText(offscreen_canvas, self.font1, 162, 29, self.textColor[0], textTeamWhite)
@@ -122,7 +126,7 @@ class RunText(SampleBase):
             except:
                 print("connection lost")
                 offscreen_canvas.Clear()
-                graphics.DrawText(offscreen_canvas, self.font1, 2, 31, self.textColor[0], "connection lost")
+                graphics.DrawText(offscreen_canvas, self.font1, 2, 31, self.textColor[0], "connection lost ...")
                 offscreen_canvas = self.matrix.SwapOnVSync(offscreen_canvas)
                 s.close()
                 time.sleep(1)
@@ -145,15 +149,15 @@ class RunText(SampleBase):
                             textTimeGame = tempText[1]
                             if len(tempText)>2:
                                 if tempText[2] == "default":
-                                    timeColor = textColor[0]
+                                    timeColor = self.textColor[0]
                                 elif tempText[2] == "red":
-                                    timeColor = textColor[1]
+                                    timeColor = self.textColor[1]
                                 elif tempText[2] == "green":
-                                    timeColor = textColor[2]
+                                    timeColor = self.textColor[2]
                                 elif tempText[2] == "blue":
-                                    timeColor = textColor[3]
+                                    timeColor = self.textColor[3]
                                 elif tempText[2] == "white":
-                                    timeColor = textColor[4]
+                                    timeColor = self.textColor[4]
                                 elif tempText[2] == "rgb":
                                     color =tempText[3].split[","]
                                     timeColor = graphics.Color(color[0],color[1],color[2])
@@ -162,11 +166,11 @@ class RunText(SampleBase):
                             if len(tempText) > 1:
                                 tempTextResult = tempText[1].split(":")
                                 if tempTextResult[0].isdigit():
-                                    textResultBlue = tempTextResult[0]
-                                if len(tempTextResult) > 1 and tempTextResult[1].isdigit():
-                                    textResultWhite = tempTextResult[1]
-                                print("result: "+textResultBlue)
-                                print("result: "+textResultWhite)
+                                    textResultWhite = tempTextResult[0]
+                                if tempTextResult[1].isdigit():
+                                    textResultBlue = tempTextResult[1]
+                                print("result blue : "+textResultBlue)
+                                print("result white: "+textResultWhite)
                         elif tempText[0] == "player":
                             if tempText[1].lower() == "blue":
                                 player_blue[int(tempText[2])-1]["A"] = int(tempText[3])
@@ -174,12 +178,13 @@ class RunText(SampleBase):
                                 player_white[int(tempText[2])-1]["A"] = int(tempText[3])
                         elif tempText[0] == "brightness":
                             if len(tempText) > 1:
-                                if tempText[1].isdigit() and int(tempText[1]) > 0 and int(tempText[1]) <= 100:
-                                    print("brightness: "+tempText[1])
-                                    try:
-                                        self.matrix.brightness = int(tempText[1])
-                                    except:
-                                        print("could not set brightness")
+                                if tempText[1].isdigit():
+                                    if int(tempText[1]) > 0 and int(tempText[1]) <= 100:
+                                        print("brightness: "+tempText[1])
+                                        try:
+                                            self.matrix.brightness = int(tempText[1])
+                                        except:
+                                            print("could not set brightness")
                         elif tempText[0] == "teamBlue":
                             textTeamBlue = tempText[1]
                             print("yes blue")
@@ -192,12 +197,13 @@ class RunText(SampleBase):
                             textE1Blue = tempText[1]
                         elif tempText[0] == "exclusion2Blue":
                             textE2Blue = tempText[1]
-                        elif tempText[0] == "exclusion1Blue":
+                        elif tempText[0] == "exclusion1White":
                             textE1White = tempText[1]
-                        elif tempText[0] == "exclusion2Blue":
+                        elif tempText[0] == "exclusion2White":
                             textE2White = tempText[1]
-                except:
-                    print("could not process message")
+                except Exception as ex:
+                    print("unable to process message:")
+                    print(ex)
 
 
 if __name__=="__main__":
