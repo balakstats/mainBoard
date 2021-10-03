@@ -67,11 +67,11 @@ class RunText(SampleBase):
                        ,{"X":157,"Y":7,"T":"13:","A":0}]
 
         print("Draw!")
+        data            = ""
         textTimeGame    = "-:--"
-        textColon       = ":"
         timeColor       = self.textColor[0]
-        textResultBlue  = "--"
-        textResultWhite = "--"
+        textResultBlue  = "0"
+        textResultWhite = "0"
         textTeamBlue    = "---"
         textTeamWhite   = "---"
         textGameSection = "1"
@@ -97,9 +97,6 @@ class RunText(SampleBase):
                 graphics.DrawText(offscreen_canvas, self.font , 262, 32, timeColor, textTimeGame.split(":")[0])
                 graphics.DrawText(offscreen_canvas, self.font3 , 278, 32, timeColor, ":")
                 graphics.DrawText(offscreen_canvas, self.font , 284, 32, timeColor, textTimeGame.split(":")[1])
-#                graphics.DrawText(offscreen_canvas, font , 262, 31, timeColor, textTimeMin)
-#                graphics.DrawText(offscreen_canvas, font2, 278, 25, timeColor, textColon)
-#                graphics.DrawText(offscreen_canvas, font , 285, 31, timeColor, textTimeSec)
                 graphics.DrawText(offscreen_canvas, self.font1, 278,  8, timeColor, textGameSection)
 
                 if (textResultBlue != "--") and (int(textResultBlue) > 9):
